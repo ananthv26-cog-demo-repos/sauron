@@ -133,3 +133,10 @@ sauron:
       - dependencytrack-publisher
       - console-output
       - elasticsearch-output
+
+#################################################################
+# API docs: only document the declared responses (SPRING_CONFIG_LOCATION
+# replaces the classpath application.yaml, so repeat it here)
+#################################################################
+springdoc:
+  override-with-generic-response: false

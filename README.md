@@ -117,7 +117,7 @@ elasticsearch/dependencies-template.sh
 ```
 
 ### 2. Trigger a Build
-Use the REST API to initiate a pipeline run. See [Swagger UI](http://localhost:8080/v2/api-docs) for full details.
+Use the REST API to initiate a pipeline run. See [Swagger UI](http://localhost:8080/v3/api-docs) for full details.
 
 **Example Request:**
 ```bash
