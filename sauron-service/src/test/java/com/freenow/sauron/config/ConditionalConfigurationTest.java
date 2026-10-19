@@ -14,7 +14,7 @@ import org.pf4j.PluginManager;
 import org.pf4j.update.DefaultUpdateRepository;
 import org.pf4j.update.UpdateManager;
 import org.pf4j.update.UpdateRepository;
-import org.springdoc.core.GroupedOpenApi;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;

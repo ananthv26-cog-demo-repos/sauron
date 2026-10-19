@@ -1,7 +1,7 @@
 package com.freenow.sauron.config;
 
 import java.util.Map;
-import javax.servlet.RequestDispatcher;
+import jakarta.servlet.RequestDispatcher;
 import org.junit.Test;
 import org.springframework.boot.web.error.ErrorAttributeOptions;
 import org.springframework.boot.web.servlet.error.ErrorAttributes;
