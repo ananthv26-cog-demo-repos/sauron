@@ -28,17 +28,11 @@ public class ErrorAttributesConfig
         @Override
         public Map<String, Object> getErrorAttributes(WebRequest webRequest, ErrorAttributeOptions options)
         {
-            Map<String, Object> attributes = super.getErrorAttributes(webRequest, options);
-            if (attributes.containsKey("message"))
-            {
-                return attributes;
-            }
-
             Map<String, Object> withMessage = new LinkedHashMap<>();
-            attributes.forEach((key, value) -> {
+            super.getErrorAttributes(webRequest, options).forEach((key, value) -> {
                 if ("path".equals(key))
                 {
-                    withMessage.put("message", "");
+                    withMessage.putIfAbsent("message", "");
                 }
                 withMessage.put(key, value);
             });
