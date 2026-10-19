@@ -40,7 +40,7 @@
         <artifactory-java-client-services.version>2.9.2</artifactory-java-client-services.version>
         <spring-cloud.version>2021.0.9</spring-cloud.version>
         <modelmapper.version>2.3.8</modelmapper.version>
-        <swagger.version>3.0.0</swagger.version>
+        <springdoc.version>1.8.0</springdoc.version>
         <multirabbit.version>2.3.2</multirabbit.version>
         <maven.compiler.target>17</maven.compiler.target>
         <maven.compiler.source>17</maven.compiler.source>
@@ -130,7 +130,6 @@
             <artifactId>spring-cloud-starter-bootstrap</artifactId>
         </dependency>
 
-
         <!-- SAURON CORE -->
         <dependency>
             <groupId>com.free-now.sauron</groupId>
@@ -152,17 +151,11 @@
             <version>${artifactory-java-client-services.version}</version>
         </dependency>
 
-        <!-- SWAGGER -->
+        <!-- OPENAPI (replaces springfox; core only, springfox 3.0.0 shipped no UI either) -->
         <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-swagger2</artifactId>
-            <version>${swagger.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>io.springfox</groupId>
-            <artifactId>springfox-bean-validators</artifactId>
-            <version>${swagger.version}</version>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-webmvc-core</artifactId>
+            <version>${springdoc.version}</version>
         </dependency>
 
         <!-- JUNIT 4: the suite is JUnit 4; spring-boot-starter-test stopped bringing the vintage engine in Boot 2.4 -->

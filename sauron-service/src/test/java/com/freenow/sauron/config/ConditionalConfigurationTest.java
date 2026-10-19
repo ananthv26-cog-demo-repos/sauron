@@ -14,6 +14,7 @@ import org.pf4j.PluginManager;
 import org.pf4j.update.DefaultUpdateRepository;
 import org.pf4j.update.UpdateManager;
 import org.pf4j.update.UpdateRepository;
+import org.springdoc.core.GroupedOpenApi;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.config.SimpleRabbitListenerContainerFactory;
 import org.springframework.amqp.rabbit.connection.ConnectionFactory;
@@ -22,7 +23,6 @@ import org.springframework.amqp.rabbit.listener.RabbitListenerEndpointRegistry;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.boot.test.context.runner.ApplicationContextRunner;
 import org.springframework.test.util.ReflectionTestUtils;
-import springfox.documentation.spring.web.plugins.Docket;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.mock;
@@ -163,10 +163,9 @@ public class ConditionalConfigurationTest
     @Test
     public void swaggerDocumentsOnlyControllersWithoutDefaultResponses()
     {
-        Docket docket = new SwaggerConfig().api();
+        GroupedOpenApi api = new SwaggerConfig().api();
 
-        assertThat(ReflectionTestUtils.getField(docket, "applyDefaultResponseMessages")).isEqualTo(false);
-        assertThat(docket.getDocumentationType().getName()).isEqualTo("swagger");
-        assertThat(docket.getDocumentationType().getVersion()).isEqualTo("2.0");
+        assertThat(api.getPackagesToScan()).containsExactly("com.freenow.sauron.controller");
+        assertThat(api.getPathsToMatch()).containsExactly("/**");
     }
 }
