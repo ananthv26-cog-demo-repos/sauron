@@ -1,4 +1,4 @@
-FROM eclipse-temurin:11-jre AS java-dist
+FROM eclipse-temurin:17-jre AS java-dist
 FROM node:24-slim AS node-dist
 FROM anchore/syft:v1.42.3 AS syft-dist
 

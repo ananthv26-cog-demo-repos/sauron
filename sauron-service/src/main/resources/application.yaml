@@ -1,0 +1,3 @@
+springdoc:
+  # Springfox was configured with useDefaultResponseMessages(false); only document the declared responses.
+  override-with-generic-response: false

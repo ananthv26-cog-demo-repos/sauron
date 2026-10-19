@@ -1,28 +1,31 @@
 package com.freenow.sauron.config;
 
+import io.swagger.v3.oas.models.OpenAPI;
+import io.swagger.v3.oas.models.info.Info;
+import org.springdoc.core.models.GroupedOpenApi;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
-import springfox.bean.validators.configuration.BeanValidatorPluginsConfiguration;
-import springfox.documentation.builders.PathSelectors;
-import springfox.documentation.builders.RequestHandlerSelectors;
-import springfox.documentation.spi.DocumentationType;
-import springfox.documentation.spring.web.plugins.Docket;
-import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @Configuration
-@EnableSwagger2
-@Import(BeanValidatorPluginsConfiguration.class)
 public class SwaggerConfig
 {
+    static final String CONTROLLER_PACKAGE = "com.freenow.sauron.controller";
+
+
     @Bean
-    public Docket api()
+    public GroupedOpenApi api()
     {
-        return new Docket(DocumentationType.SWAGGER_2)
-            .useDefaultResponseMessages(false)
-            .select()
-            .apis(RequestHandlerSelectors.basePackage("com.freenow.sauron.controller"))
-            .paths(PathSelectors.any())
+        return GroupedOpenApi.builder()
+            .group("default")
+            .packagesToScan(CONTROLLER_PACKAGE)
+            .pathsToMatch("/**")
             .build();
+    }
+
+
+    @Bean
+    public OpenAPI openApi()
+    {
+        return new OpenAPI().info(new Info().title("Api Documentation").version("1.0"));
     }
 }
