@@ -48,6 +48,8 @@
         <logback-json-classic.version>0.1.5</logback-json-classic.version>
         <logback-jackson.version>0.1.5</logback-jackson.version>
         <lombok.version>1.18.42</lombok.version>
+        <mockito.version>4.11.0</mockito.version>
+        <byte-buddy.version>1.14.19</byte-buddy.version>
     </properties>
 
     <scm>
