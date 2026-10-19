@@ -119,8 +119,10 @@ public class ConditionalConfigurationTest
             {
                 assertThat(context.getBean(Artifactory.class).getUri()).isEqualTo("https://artifactory.example.com");
                 assertThat(context.getBean(Artifactory.class).getContextName()).isEqualTo("artifactory");
-                assertThat(context).hasSingleBean(ArtifactoryDownloader.class);
+                ArtifactoryDownloader downloader = context.getBean(ArtifactoryDownloader.class);
+                assertThat(downloader).isNotNull();
                 assertThat(context).getBean(UpdateRepository.class).isInstanceOf(ArtifactoryRepository.class);
+                assertThat(((ArtifactoryRepository) context.getBean(UpdateRepository.class)).getFileDownloader()).isSameAs(downloader);
             });
     }
 
