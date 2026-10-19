@@ -124,6 +124,12 @@
             <artifactId>spring-cloud-starter-config</artifactId>
         </dependency>
 
+        <!-- Spring Cloud 2020+ no longer reads bootstrap.yaml unless this is on the classpath -->
+        <dependency>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-bootstrap</artifactId>
+        </dependency>
+
 
         <!-- SAURON CORE -->
         <dependency>
