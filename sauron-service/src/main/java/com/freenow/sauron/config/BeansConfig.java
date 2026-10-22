@@ -1,7 +1,7 @@
 package com.freenow.sauron.config;
 
-import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
-import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
+import org.springframework.boot.actuate.web.exchanges.HttpExchangeRepository;
+import org.springframework.boot.actuate.web.exchanges.InMemoryHttpExchangeRepository;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 public class BeansConfig
 {
     @Bean
-    public HttpTraceRepository httpTraceRepository()
+    public HttpExchangeRepository httpExchangeRepository()
     {
-        return new InMemoryHttpTraceRepository();
+        return new InMemoryHttpExchangeRepository();
     }
 }
