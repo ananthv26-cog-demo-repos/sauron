@@ -2,9 +2,9 @@ package com.freenow.sauron.controller;
 
 import com.freenow.sauron.datatransferobject.BuildRequest;
 import com.freenow.sauron.service.PipelineService;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -28,11 +28,11 @@ public class PipelineController
 
 
     @PostMapping("/build")
-    @ApiOperation(value = "Start a new asynchronous build in Sauron.")
+    @Operation(summary = "Start a new asynchronous build in Sauron.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "New build has been accepted"),
-        @ApiResponse(code = 400, message = "Bad request. Invalid input parameters."),
-        @ApiResponse(code = 500, message = "Internal Server Error.")
+        @ApiResponse(responseCode = "200", description = "New build has been accepted"),
+        @ApiResponse(responseCode = "400", description = "Bad request. Invalid input parameters."),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error.")
     })
     public ResponseEntity<Void> build(@Valid @RequestBody BuildRequest request)
     {

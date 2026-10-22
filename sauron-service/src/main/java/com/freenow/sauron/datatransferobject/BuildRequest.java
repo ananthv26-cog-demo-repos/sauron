@@ -1,6 +1,6 @@
 package com.freenow.sauron.datatransferobject;
 
-import io.swagger.annotations.ApiModelProperty;
+import io.swagger.v3.oas.annotations.media.Schema;
 import java.io.Serializable;
 import java.util.Date;
 import javax.validation.constraints.NotEmpty;
@@ -61,35 +61,35 @@ public class BuildRequest implements Serializable
     @Builder.Default
     private String user = "none";
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
     @Builder.Default
     private Platform platform = Platform.ECS;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     @NotNull
     @Builder.Default
     private DeploymentStrategy deploymentStrategy = DeploymentStrategy.BLUE_GREEN;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String documentId;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String indexName;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String plugin;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private String customizedRepositoryUrl;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer deploymentState;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer tookSeconds;
 
-    @ApiModelProperty(required = false)
+    @Schema(requiredMode = Schema.RequiredMode.NOT_REQUIRED)
     private Integer canaryWeight;
 
 
