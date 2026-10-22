@@ -47,6 +47,9 @@
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
         <logback-json-classic.version>0.1.5</logback-json-classic.version>
         <logback-jackson.version>0.1.5</logback-jackson.version>
+        <testcontainers.version>1.21.4</testcontainers.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <pitest.version>1.15.8</pitest.version>
     </properties>
 
     <scm>
@@ -165,6 +168,26 @@
             <scope>test</scope>
         </dependency>
 
+        <!-- CHARACTERIZATION TESTS -->
+        <dependency>
+            <groupId>com.squareup.okhttp3</groupId>
+            <artifactId>mockwebserver</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.awaitility</groupId>
+            <artifactId>awaitility</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.testcontainers</groupId>
+            <artifactId>rabbitmq</artifactId>
+            <version>${testcontainers.version}</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- MODEL MAPPER -->
         <dependency>
             <groupId>org.modelmapper</groupId>
@@ -265,4 +288,58 @@
             
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Off by default. mvn -Pcoverage verify (JaCoCo) and mvn -Pcoverage test-compile org.pitest:pitest-maven:mutationCoverage (PIT). -->
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>${pitest.version}</version>
+                        <configuration>
+                            <targetClasses>
+                                <param>com.freenow.sauron.*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>com.freenow.sauron.*</param>
+                            </targetTests>
+                            <excludedTestClasses>
+                                <param>com.freenow.sauron.*BrokerTest</param>
+                            </excludedTestClasses>
+                            <outputFormats>
+                                <param>HTML</param>
+                                <param>XML</param>
+                            </outputFormats>
+                            <timestampedReports>false</timestampedReports>
+                            <mutators>
+                                <mutator>DEFAULTS</mutator>
+                            </mutators>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
