@@ -208,3 +208,26 @@ Sauron's modularity comes from its plugins. Plugins are reloaded every **5 minut
    }
    ```   
 5. **Deploy**: Add your JAR to the configured plugin repository (Local or Artifactory).
+
+---
+
+## Tests and Coverage
+
+The characterization suite pins the service's current behavior (HTTP responses, JSON shapes, config binding, plugin loading, RabbitMQ messaging, error handling) so a framework or platform migration shows any change as a failing test. Tests named `..._currentBehavior` pin behavior that looks wrong; each has a `CHARACTERIZATION:` comment explaining why. Do not "fix" them without a decision.
+
+Run on JDK 11 (see `.sdkmanrc`):
+
+```bash
+# All tests (same as CI)
+mvn verify -Dgpg.skip=true
+
+# Line/branch coverage: target/site/jacoco/
+mvn -Pcoverage verify -Dgpg.skip=true
+
+# Mutation testing (PIT): target/pit-reports/
+mvn -Pcoverage test-compile org.pitest:pitest-maven:mutationCoverage
+```
+
+- `RabbitmqRequestHandlerBrokerTest` starts a real RabbitMQ with Testcontainers. It is skipped when Docker is not available and excluded from PIT.
+- `lombok.config` adds Lombok's `@Generated` marker (class-retention only, no runtime change) so JaCoCo and PIT ignore generated `equals`/`hashCode`/`toString`.
+- The `coverage` profile is off by default; the normal build does not change.
