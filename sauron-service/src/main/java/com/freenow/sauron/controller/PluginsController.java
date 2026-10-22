@@ -1,9 +1,9 @@
 package com.freenow.sauron.controller;
 
 import com.freenow.sauron.plugins.AutomaticPluginUpdater;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.extern.slf4j.Slf4j;
@@ -37,10 +37,10 @@ public class PluginsController
 
 
     @GetMapping
-    @ApiOperation(value = "Return all loaded plugins.")
+    @Operation(summary = "Return all loaded plugins.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Return a list of all loaded plugins", responseContainer = "List", response = PluginDescriptor.class),
-        @ApiResponse(code = 500, message = "Internal Server Error.")
+        @ApiResponse(responseCode = "200", description = "Return a list of all loaded plugins"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error.")
     })
     public ResponseEntity<List<PluginDescriptor>> list()
     {
@@ -49,10 +49,10 @@ public class PluginsController
 
 
     @GetMapping("/ids")
-    @ApiOperation(value = "Return all loaded plugins id.")
+    @Operation(summary = "Return all loaded plugins id.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Return a list of all loaded plugins id", responseContainer = "List", response = String.class),
-        @ApiResponse(code = 500, message = "Internal Server Error.")
+        @ApiResponse(responseCode = "200", description = "Return a list of all loaded plugins id"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error.")
     })
     public ResponseEntity<List<String>> listPluginsId()
     {
@@ -61,10 +61,10 @@ public class PluginsController
 
 
     @PutMapping("/reload")
-    @ApiOperation(value = "Request a plugin synchronous reloading process.")
+    @Operation(summary = "Request a plugin synchronous reloading process.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "New reloading process has been started"),
-        @ApiResponse(code = 500, message = "Internal Server Error.")
+        @ApiResponse(responseCode = "200", description = "New reloading process has been started"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error.")
     })
     public ResponseEntity<Void> reload()
     {
@@ -74,10 +74,10 @@ public class PluginsController
 
 
     @PutMapping("/forcereload/{pluginId}")
-    @ApiOperation(value = "Force a plugin by id to be reloaded.")
+    @Operation(summary = "Force a plugin by id to be reloaded.")
     @ApiResponses({
-        @ApiResponse(code = 200, message = "Plugin has been reloaded"),
-        @ApiResponse(code = 500, message = "Internal Server Error.")
+        @ApiResponse(responseCode = "200", description = "Plugin has been reloaded"),
+        @ApiResponse(responseCode = "500", description = "Internal Server Error.")
     })
     public ResponseEntity<Void> forceReload(@PathVariable String pluginId)
     {

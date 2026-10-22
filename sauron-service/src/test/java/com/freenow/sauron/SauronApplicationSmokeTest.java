@@ -190,7 +190,9 @@ public class SauronApplicationSmokeTest
         assertThat(health.getBody()).isEqualTo("{\"status\":\"DOWN\"}");
 
         HealthContributorRegistry registry = context.getBean(HealthContributorRegistry.class);
-        assertThat(registry.stream().map(c -> c.getName()).sorted().collect(java.util.stream.Collectors.joining(","))).isEqualTo("discoveryComposite,diskSpace,ping,pluginsLoadedIndicator,rabbit,refreshScope");
+        assertThat(registry.stream().map(c -> c.getName()).sorted().collect(java.util.stream.Collectors.joining(","))).isEqualTo("clientConfigServer,discoveryComposite,diskSpace,ping,pluginsLoadedIndicator,rabbit,refreshScope,ssl");
+        // INTENDED CHANGE (Spring Cloud 2020): the config client now always registers a clientConfigServer health check (UNKNOWN while spring.cloud.config.enabled=false; Hoxton called it configServer and only added it when the config client was on).
+        // INTENDED CHANGE (Spring Boot 3.5): actuator adds an ssl health check (SSL bundle certificate expiry; UP with no bundles). /actuator/health above is unchanged.
         assertThat(((HealthIndicator) registry.getContributor("pluginsLoadedIndicator")).health().getStatus()).isEqualTo(Status.UP);
         assertThat(((HealthIndicator) registry.getContributor("rabbit")).health().getStatus()).isEqualTo(Status.DOWN);
 
@@ -203,8 +205,8 @@ public class SauronApplicationSmokeTest
     public void onlyHealthAndInfoActuatorEndpointsAreExposed()
     {
         ResponseEntity<String> info = rest.getForEntity("/actuator/info", String.class);
-        assertThat(info.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(info.getBody()).isEqualTo("{}");
+        assertThat(info.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        // INTENDED CHANGE (Spring Boot 2.5): /actuator/info is no longer exposed over HTTP by default (was 200 {}). Needs approval; restore with management.endpoints.web.exposure.include=health,info.
         assertThat(rest.getForEntity("/actuator/prometheus", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(rest.getForEntity("/actuator/httptrace", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(rest.getForEntity("/actuator/env", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
@@ -215,11 +217,13 @@ public class SauronApplicationSmokeTest
     @SuppressWarnings("unchecked")
     public void swaggerDocumentListsOnlyTheSauronControllers()
     {
-        ResponseEntity<Map> response = rest.getForEntity("/v2/api-docs", Map.class);
+        // INTENDED CHANGE (Springfox -> springdoc): the Swagger 2.0 document at /v2/api-docs is now an OpenAPI 3 document at /v3/api-docs; same paths, summaries and responses.
+        assertThat(rest.getForEntity("/v2/api-docs", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        ResponseEntity<Map> response = rest.getForEntity("/v3/api-docs", Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Map<String, Object> body = response.getBody();
-        assertThat(body.get("swagger")).isEqualTo("2.0");
+        assertThat((String) body.get("openapi")).startsWith("3.");
         Map<String, Map<String, Object>> paths = (Map<String, Map<String, Object>>) body.get("paths");
         assertThat(paths).containsOnlyKeys("/api/v1/build", "/api/v1/plugins", "/api/v1/plugins/ids", "/api/v1/plugins/reload", "/api/v1/plugins/forcereload/{pluginId}");
         Map<String, Object> build = (Map<String, Object>) paths.get("/api/v1/build").get("post");

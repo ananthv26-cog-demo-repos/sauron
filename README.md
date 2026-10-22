@@ -117,7 +117,7 @@ elasticsearch/dependencies-template.sh
 ```
 
 ### 2. Trigger a Build
-Use the REST API to initiate a pipeline run. See [Swagger UI](http://localhost:8080/v2/api-docs) for full details.
+Use the REST API to initiate a pipeline run. See the [OpenAPI document](http://localhost:8080/v3/api-docs) for full details.
 
 **Example Request:**
 ```bash
@@ -215,7 +215,7 @@ Sauron's modularity comes from its plugins. Plugins are reloaded every **5 minut
 
 The characterization suite pins the service's current behavior (HTTP responses, JSON shapes, config binding, plugin loading, RabbitMQ messaging, error handling) so a framework or platform migration shows any change as a failing test. Tests named `..._currentBehavior` pin behavior that looks wrong; each has a `CHARACTERIZATION:` comment explaining why. Do not "fix" them without a decision.
 
-Run on JDK 11 (see `.sdkmanrc`):
+Run on JDK 17 (see `.sdkmanrc`):
 
 ```bash
 # All tests (same as CI)
