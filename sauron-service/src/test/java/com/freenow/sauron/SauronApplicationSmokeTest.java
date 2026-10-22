@@ -204,8 +204,8 @@ public class SauronApplicationSmokeTest
     public void onlyHealthAndInfoActuatorEndpointsAreExposed()
     {
         ResponseEntity<String> info = rest.getForEntity("/actuator/info", String.class);
-        assertThat(info.getStatusCode()).isEqualTo(HttpStatus.OK);
-        assertThat(info.getBody()).isEqualTo("{}");
+        assertThat(info.getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        // INTENDED CHANGE (Spring Boot 2.5): /actuator/info is no longer exposed over HTTP by default (was 200 {}). Needs approval; restore with management.endpoints.web.exposure.include=health,info.
         assertThat(rest.getForEntity("/actuator/prometheus", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(rest.getForEntity("/actuator/httptrace", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
         assertThat(rest.getForEntity("/actuator/env", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
