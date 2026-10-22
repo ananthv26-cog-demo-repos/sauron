@@ -160,6 +160,23 @@ public class ArtifactoryRepositoryTest
 
 
     @Test
+    public void fileEntryUnderTheGroupFolderBreaksTheWholeRefresh_currentBehavior()
+    {
+        // CHARACTERIZATION: a file directly under the group folder (e.g. maven-metadata.xml) is read as a Folder with null children; isFolder() is true, so getChildren().isEmpty() throws and every plugin listed after it is lost.
+        folder(GROUP, child("a", true), child("maven-metadata.xml", false), child("b", true));
+        folder(GROUP + "/a", child("1", true));
+        search("a", "1", "a-1.jar");
+        folder(GROUP + "/b", child("1", true));
+        search("b", "1", "b-1.jar");
+        routes.put("/api/storage/repo/" + GROUP + "/maven-metadata.xml", new MockResponse().setHeader("Content-Type", "application/json")
+            .setBody("{\"repo\":\"repo\",\"path\":\"/" + GROUP + "/maven-metadata.xml\",\"size\":\"10\",\"mimeType\":\"application/xml\"}"));
+
+        assertThatThrownBy(() -> repository.getPlugins()).isInstanceOf(NullPointerException.class);
+        assertThat(repository.getPlugins()).containsOnlyKeys("a");
+    }
+
+
+    @Test
     public void pluginsAreCachedUntilRefresh()
     {
         folder(GROUP, child("a", true));

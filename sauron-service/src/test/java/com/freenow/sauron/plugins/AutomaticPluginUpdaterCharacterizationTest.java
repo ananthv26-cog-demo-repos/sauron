@@ -14,6 +14,7 @@ import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 import org.pf4j.DefaultPluginManager;
 import org.pf4j.PluginManager;
+import org.pf4j.PluginRuntimeException;
 import org.pf4j.PluginState;
 import org.pf4j.update.DefaultUpdateRepository;
 import org.pf4j.update.FileDownloader;
@@ -172,6 +173,57 @@ public class AutomaticPluginUpdaterCharacterizationTest
 
         assertThat(pluginManager.getPlugins()).isEmpty();
         assertThat(events).isEmpty();
+    }
+
+
+    @Test
+    public void installReportedAsFailedIsLoggedAndStillPublishesSuccess() throws Exception
+    {
+        LocalPluginRepository.write(repositoryDir, jarDir, "0.0.7");
+        UpdateManager updateManager = new UpdateManager(pluginManager, Collections.singletonList(localRepository()))
+        {
+            @Override
+            public synchronized boolean installPlugin(String id, String version)
+            {
+                return false;
+            }
+        };
+
+        new AutomaticPluginUpdater(updateManager, pluginManager, events::add).update();
+
+        assertThat(pluginManager.getPlugins()).isEmpty();
+        assertSuccessEvents(1);
+    }
+
+
+    @Test
+    public void updateReportedAsFailedOrThrowingKeepsTheOldVersionAndStillPublishesSuccess() throws Exception
+    {
+        LocalPluginRepository.write(repositoryDir, jarDir, "0.0.7");
+        updater(localRepository()).update();
+        LocalPluginRepository.write(repositoryDir, jarDir, "0.0.7", "0.0.8");
+        List<String> attempts = new ArrayList<>();
+        UpdateManager updateManager = new UpdateManager(pluginManager, Collections.singletonList(localRepository()))
+        {
+            @Override
+            public synchronized boolean updatePlugin(String id, String version)
+            {
+                attempts.add(id + "@" + version);
+                if (attempts.size() == 1)
+                {
+                    return false;
+                }
+                throw new PluginRuntimeException("cannot update");
+            }
+        };
+        AutomaticPluginUpdater updater = new AutomaticPluginUpdater(updateManager, pluginManager, events::add);
+
+        updater.update();
+        updater.update();
+
+        assertThat(attempts).containsExactly("console-output@0.0.8", "console-output@0.0.8");
+        assertThat(Files.list(pluginsRoot).map(p -> p.getFileName().toString())).containsExactly("console-output-0.0.7.jar");
+        assertSuccessEvents(3);
     }
 
 
