@@ -190,8 +190,9 @@ public class SauronApplicationSmokeTest
         assertThat(health.getBody()).isEqualTo("{\"status\":\"DOWN\"}");
 
         HealthContributorRegistry registry = context.getBean(HealthContributorRegistry.class);
-        assertThat(registry.stream().map(c -> c.getName()).sorted().collect(java.util.stream.Collectors.joining(","))).isEqualTo("clientConfigServer,discoveryComposite,diskSpace,ping,pluginsLoadedIndicator,rabbit,refreshScope");
+        assertThat(registry.stream().map(c -> c.getName()).sorted().collect(java.util.stream.Collectors.joining(","))).isEqualTo("clientConfigServer,discoveryComposite,diskSpace,ping,pluginsLoadedIndicator,rabbit,refreshScope,ssl");
         // INTENDED CHANGE (Spring Cloud 2020): the config client now always registers a clientConfigServer health check (UNKNOWN while spring.cloud.config.enabled=false; Hoxton called it configServer and only added it when the config client was on).
+        // INTENDED CHANGE (Spring Boot 3.5): actuator adds an ssl health check (SSL bundle certificate expiry; UP with no bundles). /actuator/health above is unchanged.
         assertThat(((HealthIndicator) registry.getContributor("pluginsLoadedIndicator")).health().getStatus()).isEqualTo(Status.UP);
         assertThat(((HealthIndicator) registry.getContributor("rabbit")).health().getStatus()).isEqualTo(Status.DOWN);
 
