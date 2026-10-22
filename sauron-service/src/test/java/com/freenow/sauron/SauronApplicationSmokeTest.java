@@ -216,11 +216,13 @@ public class SauronApplicationSmokeTest
     @SuppressWarnings("unchecked")
     public void swaggerDocumentListsOnlyTheSauronControllers()
     {
-        ResponseEntity<Map> response = rest.getForEntity("/v2/api-docs", Map.class);
+        // INTENDED CHANGE (Springfox -> springdoc): the Swagger 2.0 document at /v2/api-docs is now an OpenAPI 3 document at /v3/api-docs; same paths, summaries and responses.
+        assertThat(rest.getForEntity("/v2/api-docs", String.class).getStatusCode()).isEqualTo(HttpStatus.NOT_FOUND);
+        ResponseEntity<Map> response = rest.getForEntity("/v3/api-docs", Map.class);
 
         assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
         Map<String, Object> body = response.getBody();
-        assertThat(body.get("swagger")).isEqualTo("2.0");
+        assertThat((String) body.get("openapi")).startsWith("3.");
         Map<String, Map<String, Object>> paths = (Map<String, Map<String, Object>>) body.get("paths");
         assertThat(paths).containsOnlyKeys("/api/v1/build", "/api/v1/plugins", "/api/v1/plugins/ids", "/api/v1/plugins/reload", "/api/v1/plugins/forcereload/{pluginId}");
         Map<String, Object> build = (Map<String, Object>) paths.get("/api/v1/build").get("post");
