@@ -29,7 +29,7 @@ public class BlankMessageErrorAttributesTest
     @Test
     public void includeMessageStillShowsTheRealMessage()
     {
-        Map<String, Object> attributes = errorAttributes.getErrorAttributes(request(), ErrorAttributeOptions.of(MESSAGE));
+        Map<String, Object> attributes = errorAttributes.getErrorAttributes(request(), ErrorAttributeOptions.defaults().including(MESSAGE));
 
         assertThat(attributes.keySet()).containsExactly("timestamp", "status", "error", "message", "path");
         assertThat(attributes.get("message")).isEqualTo("No message available");
