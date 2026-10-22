@@ -34,6 +34,9 @@
         <jackson.version>2.11.2</jackson.version>
         <logback.version>1.2.3</logback.version>
         <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
+        <junit.version>4.13.2</junit.version>
+        <jacoco.version>0.8.12</jacoco.version>
+        <pitest.version>1.15.8</pitest.version>
         <scm.url>scm:git:git@github.com:freenowtech/sauron.git</scm.url>
     </properties>
 
@@ -112,6 +115,14 @@
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
         </dependency>
+
+        <!-- TEST -->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -180,4 +191,55 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Off by default: mvn -Pcoverage verify, then mvn -Pcoverage org.pitest:pitest-maven:mutationCoverage -->
+        <profile>
+            <id>coverage</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jacoco</groupId>
+                        <artifactId>jacoco-maven-plugin</artifactId>
+                        <version>${jacoco.version}</version>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>prepare-agent</goal>
+                                </goals>
+                            </execution>
+                            <execution>
+                                <id>report</id>
+                                <phase>verify</phase>
+                                <goals>
+                                    <goal>report</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <groupId>org.pitest</groupId>
+                        <artifactId>pitest-maven</artifactId>
+                        <version>${pitest.version}</version>
+                        <configuration>
+                            <targetClasses>
+                                <param>com.freenow.sauron.*</param>
+                            </targetClasses>
+                            <targetTests>
+                                <param>com.freenow.sauron.*</param>
+                            </targetTests>
+                            <outputFormats>
+                                <param>HTML</param>
+                                <param>XML</param>
+                            </outputFormats>
+                            <timestampedReports>false</timestampedReports>
+                            <mutators>
+                                <mutator>DEFAULTS</mutator>
+                            </mutators>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>
