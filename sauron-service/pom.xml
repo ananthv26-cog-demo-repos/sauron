@@ -5,7 +5,7 @@
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.5.15</version>
+        <version>2.7.18</version>
         <relativePath />
     </parent>
 
@@ -38,7 +38,7 @@
         <scm.url>scm:git:git@github.com:freenowtech/sauron.git</scm.url>
         <pf4j-update.version>2.3.0</pf4j-update.version>
         <artifactory-java-client-services.version>2.9.2</artifactory-java-client-services.version>
-        <spring-cloud.version>2020.0.6</spring-cloud.version>
+        <spring-cloud.version>2021.0.9</spring-cloud.version>
         <modelmapper.version>2.3.8</modelmapper.version>
         <springdoc.version>1.8.0</springdoc.version>
         <multirabbit.version>2.3.2</multirabbit.version>
